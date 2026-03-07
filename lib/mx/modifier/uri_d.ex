@@ -1,0 +1,7 @@
+defmodule Mx.Modifier.UriD do
+  use Mc.Modifier
+
+  def m(buffer, _args, _mappings) do
+    {:ok, URI.decode(buffer)}
+  end
+end
