@@ -5,8 +5,8 @@ defmodule Mx.Modifier.Round do
     trim_buffer = String.trim(buffer)
 
     with \
-      {:ok, number} <- Mc.String.to_num(trim_buffer),
-      {:ok, precision} when precision in 0..15 <- Mc.String.to_int(args)
+      {:ok, number} <- Ut.String.to_num(trim_buffer),
+      {:ok, precision} when precision in 0..15 <- Ut.String.to_int(args)
     do
       float = to_float(number)
       result = Float.round(float, precision)

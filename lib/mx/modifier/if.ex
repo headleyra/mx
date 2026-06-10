@@ -3,7 +3,7 @@ defmodule Mx.Modifier.If do
 
   def m(buffer, args, mappings) do
     with \
-      [regx_str, true_script, false_script] <- Mc.Parse.split(args),
+      [regx_str, true_script, false_script] <- Ut.Parse.split(args),
       {:ok, regx} <- Regex.compile(regx_str)
     do
       script = if String.match?(buffer, regx), do: true_script, else: false_script

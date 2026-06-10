@@ -10,7 +10,7 @@ defmodule Mx.Math do
   end
 
   def to_number_or_as_is(string) do
-    case Mc.String.to_num(string) do
+    case Ut.String.to_num(string) do
       :error ->
         string
 

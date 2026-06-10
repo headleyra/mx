@@ -4,7 +4,7 @@ defmodule Mx.MixProject do
   def project do
     [
       app: :mx,
-      version: "0.105.1",
+      version: "0.106.0",
       elixir: "~> 1.19",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -26,6 +26,9 @@ defmodule Mx.MixProject do
 
       # Mc
       {:mc, git: "https://github.com/headleyra/mc.git"},
+
+      # Utils
+      {:ut, git: "https://github.com/headleyra/ut.git"},
 
       # PostgreSQL
       {:postgrex, "~> 0.16"},

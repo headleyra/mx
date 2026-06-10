@@ -5,7 +5,7 @@ defmodule Mx.Modifier.Truncate do
     chars = String.graphemes(buffer)
     char_count = chars |> Enum.count()
 
-    case Mc.String.to_int(args) do
+    case Ut.String.to_int(args) do
       {:ok, truncate_count} when truncate_count >= 1 ->
         if truncatable?(char_count, truncate_count) do
           truncate(chars, truncate_count)
