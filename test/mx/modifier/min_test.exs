@@ -14,8 +14,8 @@ defmodule Mx.Modifier.MinTest do
       assert Min.m({:ok, "some buffer text"}, "", %{}) == {:ok, "buffer"}
     end
 
-    test "allows error tuples to pass-through" do
-      assert Min.m({:error, "reason"}, "n/a", %{}) == {:error, "reason"}
+    test "allows error-tuples to pass through" do
+      assert Min.m({:error, Mod, :fuel, "low", []}, "", %{}) == {:error, Mod, :fuel, "low", []}
     end
   end
 end

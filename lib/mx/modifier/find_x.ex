@@ -9,10 +9,10 @@ defmodule Mx.Modifier.FindX do
       {:ok, result}
     else
       {:parse, _} ->
-        oops("parse error")
+        oops(:foo, "parse error")
 
       {:error, reason} ->
-        oops(reason)
+        oops(:foo, reason)
     end
   end
 

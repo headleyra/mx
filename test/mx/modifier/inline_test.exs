@@ -27,11 +27,29 @@ defmodule Mx.Modifier.InlineTest do
     end
 
     test "returns errors", %{mappings: mappings} do
-      assert Inline.m("{error oops}", "", mappings) == {:error, "oops"}
+      assert Inline.m("{error oops}", "", mappings) == {
+        :error,
+        Mx.Modifier.Inline,
+        :script_error,
+        "{error oops}",
+        [
+          {Mc.Modifier.Buffer, :script_error, "{error oops}"},
+          {Mc.Modifier.Error, :error, "oops"}
+        ]
+      }
     end
 
     test "returns the first error", %{mappings: mappings} do
-      assert Inline.m("{error first} {error second}", "", mappings) == {:error, "first"}
+      assert Inline.m("{error first} {error second}", "", mappings) == {
+        :error,
+        Mx.Modifier.Inline,
+        :script_error,
+        "{error first} {error second}",
+        [
+          {Mc.Modifier.Buffer, :script_error, "{error first} {error second}"},
+          {Mc.Modifier.Error, :error, "first"}
+        ]
+      }
     end
 
     test "works with ok tuples" do
@@ -39,7 +57,7 @@ defmodule Mx.Modifier.InlineTest do
     end
 
     test "allows error tuples to pass through" do
-      assert Inline.m({:error, "reason"}, "", %{}) == {:error, "reason"}
+      assert Inline.m({:error, Mod, :fuel, "low", []}, "", %{}) == {:error, Mod, :fuel, "low", []}
     end
   end
 end

@@ -10,7 +10,7 @@ defmodule Mx.Modifier.PadL do
       {:ok, String.pad_leading(buffer, width_int, padding_uri)}
     else
       _error ->
-        oops("parse error")
+        oops(:foo, "parse error")
     end
   end
 end

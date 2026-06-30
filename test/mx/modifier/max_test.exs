@@ -14,8 +14,8 @@ defmodule Mx.Modifier.MaxTest do
       assert Max.m({:ok, "some buffer text"}, "", %{}) == {:ok, "text"}
     end
 
-    test "allows error tuples to pass-through" do
-      assert Max.m({:error, "reason"}, "n/a", %{}) == {:error, "reason"}
+    test "allows error-tuples to pass through" do
+      assert Max.m({:error, Mod, :fuel, "low", []}, "", %{}) == {:error, Mod, :fuel, "low", []}
     end
   end
 end

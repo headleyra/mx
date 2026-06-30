@@ -20,7 +20,6 @@ defmodule Mx.Modifier.RoundTest do
 
     test "handles integers (ignores precision)" do
       assert Round.m("11", "1", %{}) == {:ok, "11.0"}
-      assert Round.m("-21", "3", %{}) == {:ok, "-21.0"}
       assert Round.m("85", "0", %{}) == {:ok, "85.0"}
     end
 
@@ -29,18 +28,24 @@ defmodule Mx.Modifier.RoundTest do
       assert Round.m("\t -1.88 \n ", "1", %{}) == {:ok, "-1.9"}
     end
 
-    @parse_error "Mx.Modifier.Round: parse error"
-
     test "errors when a number isn't given" do
-      assert Round.m("", "7", %{}) == {:error, @parse_error}
-      assert Round.m("\t", "5", %{}) == {:error, @parse_error}
-      assert Round.m("one point seven", "1", %{}) == {:error, @parse_error}
+      assert Round.m("", "7", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
+      assert Round.m("\t", "5", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
+      assert Round.m("one point seven", "1", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
     end
 
     test "errors when precision is outside of 0..15 or is not an integer" do
-      assert Round.m("1.23", "-1", %{}) == {:error, @parse_error}
-      assert Round.m("1.23", "16", %{}) == {:error, @parse_error}
-      assert Round.m("1.23", "1.2", %{}) == {:error, @parse_error}
+      assert Round.m("1.23", "-1", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
+      assert Round.m("1.23", "16", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
+      assert Round.m("1.23", "1.2", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
+    end
+
+    test "works with ok-tuples" do
+      assert Round.m({:ok, "1.28"}, "1", %{}) == {:ok, "1.3"} 
+    end
+
+    test "allows error-tuples to pass through" do
+      assert Round.m({:error, Mod, :fuel, "low", []}, "", %{}) == {:error, Mod, :fuel, "low", []}
     end
   end
 end

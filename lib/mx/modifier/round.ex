@@ -2,18 +2,16 @@ defmodule Mx.Modifier.Round do
   use Mc.Modifier
 
   def m(buffer, args, _mappings) do
-    trim_buffer = String.trim(buffer)
-
     with \
-      {:ok, number} <- Ut.String.to_num(trim_buffer),
+      {:ok, number} <- String.trim(buffer) |> Ut.String.to_num(),
       {:ok, precision} when precision in 0..15 <- Ut.String.to_int(args)
     do
       float = to_float(number)
-      result = Float.round(float, precision)
-      {:ok, "#{result}"}
+      result = Float.round(float, precision) |> to_string()
+      {:ok, result}
     else
-      _error ->
-        oops("parse error")
+      _parse_error ->
+        oops(:bad_number_or_precision, nil)
     end
   end
 

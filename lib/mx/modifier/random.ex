@@ -7,7 +7,7 @@ defmodule Mx.Modifier.Random do
         {:ok, "#{:rand.uniform(integer)}"}
 
       _bad_args ->
-        oops("bad random limit")
+        oops(:foo, "bad random limit")
     end
   end
 end

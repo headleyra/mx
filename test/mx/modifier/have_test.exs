@@ -5,8 +5,8 @@ defmodule Mx.Modifier.HaveTest do
   setup do
     start_supervised({Mc.Adapter.KvMemory, map: %{
       "bob" => "2016-7-foo\n2017-01-02 2018-07-05",
-      "tim" => "  ",
-      "jon" => "\n  \t",
+      "tim" => " ",
+      "jon" => "\n \t",
       "dan" => "#{ago(7)}\n#{ago(5)}",
       "jed" => "#{ago(7)} #{ago(5)} #{ago(3)}",
       "neo" => "#{ago(5)} #{ago(3)} #{ago(0)}",
@@ -44,17 +44,28 @@ defmodule Mx.Modifier.HaveTest do
       assert Mc.m("get sam", mappings) == {:ok, today}
     end
 
-    test "errors when a key contains whitespace", %{mappings: mappings} do
-      assert Have.m("", "tim show", mappings) == {:error, "Mx.Modifier.Have: whitespace dates"}
-      assert Have.m("", "jon show", mappings) == {:error, "Mx.Modifier.Have: whitespace dates"}
-    end
-
     test "errors when a key doesn't exist", %{mappings: mappings} do
-      assert Have.m("", "no.exist show", mappings) == {:error, "Mx.Modifier.Have: dates key not found"}
+      assert Have.m("", "no.exist show", mappings) == {:error, Mx.Modifier.Have, :date_key_not_found, "no.exist", []}
     end
 
-    test "errors with a key containing 'bad' dates", %{mappings: mappings} do
-      assert Have.m("", "bob show", mappings) == {:error, "Mx.Modifier.Have: bad dates"}
+    test "errors when a key points at bad dates", %{mappings: mappings} do
+      assert Have.m("", "bob show", mappings) == {:error, Mx.Modifier.Have, :bad_dates, "2016-7-foo\n2017-01-02 2018-07-05", []}
+      assert Have.m("", "tim show", mappings) == {:error, Mx.Modifier.Have, :bad_dates, " ", []}
+      assert Have.m("", "jon show", mappings) == {:error, Mx.Modifier.Have, :bad_dates, "\n \t", []}
+    end
+
+    test "errors with whitespace", %{mappings: mappings} do
+      assert Have.m("", " ", mappings) == {:error, Mx.Modifier.Have, :parse_error, " ", []}
+      assert Have.m("", "\t ", mappings) == {:error, Mx.Modifier.Have, :parse_error, "\t ", []}
+    end
+
+    test "works with ok-tuples", %{mappings: mappings} do
+      today = "#{ago(0)}"
+      assert Have.m({:ok, "n/a"}, "sam", mappings) == {:ok, today}
+    end
+
+    test "allows error-tuples to pass through" do
+      assert Have.m({:error, Mod, :fuel, "low", []}, "", %{}) == {:error, Mod, :fuel, "low", []}
     end
   end
 

@@ -14,11 +14,11 @@ defmodule Mx.Modifier.Truncate do
         end
 
       _error ->
-        oops("bad truncate count")
+        oops(:bad_character_count, args)
     end
   end
 
-  def truncatable?(char_count, truncate_count) do
+  defp truncatable?(char_count, truncate_count) do
     (char_count - truncate_count) > 0
   end
 

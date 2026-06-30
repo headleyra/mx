@@ -8,7 +8,7 @@ defmodule Mx.Modifier.IfTest do
 
   describe "m/3" do
     test "parses `args` as: <sep> <regex><sep> <true script><sep> <false script>", do: true
-    test "runs <true script> if <regex> matches `buffer`, else runs <false script>", do: true
+    test "runs <true script> if <regex> matches `buffer` else runs <false script>", do: true
 
     test "works", %{mappings: mappings} do
       assert If.m("foo", ", fo, b true dat, b nah!", mappings) == {:ok, "true dat"}
@@ -20,27 +20,26 @@ defmodule Mx.Modifier.IfTest do
       assert If.m("foo", ", no-match, b foo, append -bar", mappings) == {:ok, "foo-bar"}
     end
 
-    @parse_err "Mx.Modifier.If: parse error"
+    @err {:error, Mx.Modifier.If, :parse_error, nil, []}
 
     test "detects parse errors" do
-      assert If.m("n/a", "", %{}) == {:error, @parse_err}
-      assert If.m("", ", regx-only", %{}) == {:error, @parse_err}
-      assert If.m("", ", regx, true-script-only", %{}) == {:error, @parse_err}
+      assert If.m("n/a", "", %{}) == @err
+      assert If.m("", ", regx-only", %{}) == @err
+      assert If.m("", ", regx, true-script-only", %{}) == @err
     end
 
-    @regx_err "Mx.Modifier.If: bad regex"
 
     test "errors when regex is bad" do
-      assert If.m("dosh", ", ?, b true, b false", %{}) == {:error, @regx_err}
+      assert If.m("dosh", ", ?, b true, b false", %{}) == {:error, Mx.Modifier.If, :bad_regex, nil, []}
     end
 
     test "works with ok tuples", %{mappings: mappings} do
-      assert If.m({:ok, "aaa"}, ", .aa, b t, b f", mappings) == {:ok, "t"}
-      assert If.m({:ok, "aaa"}, ", ba., b t, b f", mappings) == {:ok, "f"}
+      assert If.m({:ok, "aaa"}, ", aa., b t, b f", mappings) == {:ok, "t"}
+      assert If.m({:ok, "aaa"}, ", aab, b t, b f", mappings) == {:ok, "f"}
     end
 
-    test "allows error tuples to pass through" do
-      assert If.m({:error, "reason"}, "", %{}) == {:error, "reason"}
+    test "allows error-tuples to pass through" do
+      assert If.m({:error, Mod, :fuel, "low", []}, "", %{}) == {:error, Mod, :fuel, "low", []}
     end
   end
 end

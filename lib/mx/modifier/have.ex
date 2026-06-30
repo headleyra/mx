@@ -10,7 +10,7 @@ defmodule Mx.Modifier.Have do
         show(key, mappings)
 
       _parse_error ->
-        oops("parse error")
+        oops(:parse_error, args)
     end
   end
 
@@ -32,26 +32,26 @@ defmodule Mx.Modifier.Have do
 
     with \
       {:ok, date_str} <- Mc.m("get #{key}", mappings),
-      false <- String.match?(date_str, ~r/^\s*$/)
+      {false, date_str} <- {String.match?(date_str, ~r/^\s*$/), date_str}
     do
       date_str
       |> Mx.Have.stats(yesterday)
-      |> render()
+      |> render(date_str)
     else
-      true ->
-        oops("whitespace dates")
+      {true, date_str} ->
+        oops(:bad_dates, date_str)
 
-      {:error, _not_found} ->
-        oops("dates key not found")
+      {:error, _, :key_not_found, not_found_key, []} ->
+        oops(:date_key_not_found, not_found_key)
     end
   end
 
-  defp render(stats) do
+  defp render(stats, date_str) do
     case stats do
       {:error, :parse} ->
-        oops("bad dates")
+        oops(:bad_dates, date_str)
 
-      s->
+      s ->
         intervals =
           s.int
           |> Enum.reverse()

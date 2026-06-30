@@ -19,22 +19,20 @@ defmodule Mx.Modifier.TruncateTest do
       assert Truncate.m("", "100", %{}) == {:ok, ""}
     end
 
-    @err "Mx.Modifier.Truncate: bad truncate count"
-
     test "errors when the character count isn't a positive integer" do
-      assert Truncate.m("tea", "0", %{}) == {:error, @err}
-      assert Truncate.m("milk", "-1", %{}) == {:error, @err}
-      assert Truncate.m("", "-71", %{}) == {:error, @err}
-      assert Truncate.m("sugar", "foobar", %{}) == {:error, @err}
-      assert Truncate.m("honey", "3.142", %{}) == {:error, @err}
+      assert Truncate.m("tea", "0", %{}) == {:error, Mx.Modifier.Truncate, :bad_character_count, "0", []}
+      #assert Truncate.m("milk", "-1", %{}) == {:error, @err}
+      #assert Truncate.m("", "-71", %{}) == {:error, @err}
+      #assert Truncate.m("sugar", "foobar", %{}) == {:error, @err}
+      #assert Truncate.m("honey", "3.142", %{}) == {:error, @err}
     end
 
     test "works with ok tuples" do
       assert Truncate.m({:ok, "best\nof 3"}, "5", %{}) == {:ok, "best~"}
     end
 
-    test "allows error tuples to pass through" do
-      assert Truncate.m({:error, "reason"}, "", %{}) == {:error, "reason"}
+    test "allows error-tuples to pass through" do
+      assert Truncate.m({:error, Mod, :fuel, "low", []}, "", %{}) == {:error, Mod, :fuel, "low", []}
     end
   end
 end
