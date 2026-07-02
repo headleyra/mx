@@ -6,8 +6,8 @@ defmodule Mx.Modifier.Exec do
       {:ok, script} ->
         Mc.m(buffer, script, mappings)
 
-      {:error, reason} ->
-        {:error, reason}
+      {:error, _, _, _, _} = error ->
+        oops(error, :script_error, args)
     end
   end
 end
