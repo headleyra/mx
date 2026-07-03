@@ -9,8 +9,8 @@ defmodule Mx.Modifier.PadL do
       padding_uri = URI.decode(padding)
       {:ok, String.pad_leading(buffer, width_int, padding_uri)}
     else
-      _error ->
-        oops(:foo, "parse error")
+      _error_parse ->
+        oops(:parse_error, args)
     end
   end
 end

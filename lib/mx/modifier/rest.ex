@@ -8,7 +8,7 @@ defmodule Mx.Modifier.Rest do
         {:ok, result}
 
       _ ->
-        oops(:foo, "no lines")
+        oops(:no_lines, nil)
     end
   end
 end

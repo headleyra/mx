@@ -7,8 +7,8 @@ defmodule Mx.Modifier.Sleep do
         Process.sleep(ms)
         {:ok, buffer}
 
-      _bad_seconds ->
-        oops(:foo, "bad positive integer")
+      _bad_milli_seconds ->
+        oops(:bad_sleep_msecs, args)
     end
   end
 end
