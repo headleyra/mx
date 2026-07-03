@@ -10,10 +10,10 @@ defmodule Mx.Modifier.If do
       Mc.m(buffer, script, mappings)
     else
       {:error, _} ->
-        oops(:bad_regex, nil)
+        oops(:bad_regex, args)
 
-      _ ->
-        oops(:parse_error, nil)
+      _parse_error ->
+        oops(:parse_error, args)
     end
   end
 end

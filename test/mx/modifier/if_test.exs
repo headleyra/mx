@@ -20,17 +20,14 @@ defmodule Mx.Modifier.IfTest do
       assert If.m("foo", ", no-match, b foo, append -bar", mappings) == {:ok, "foo-bar"}
     end
 
-    @err {:error, Mx.Modifier.If, :parse_error, nil, []}
-
     test "detects parse errors" do
-      assert If.m("n/a", "", %{}) == @err
-      assert If.m("", ", regx-only", %{}) == @err
-      assert If.m("", ", regx, true-script-only", %{}) == @err
+      assert If.m("n/a", "", %{}) == {:error, Mx.Modifier.If, :parse_error, "", []}
+      assert If.m("", ", regx-only", %{}) == {:error, Mx.Modifier.If, :parse_error, ", regx-only", []}
+      assert If.m("", ", regx, true-script-only", %{}) == {:error, Mx.Modifier.If, :parse_error, ", regx, true-script-only", []}
     end
 
-
     test "errors when regex is bad" do
-      assert If.m("dosh", ", ?, b true, b false", %{}) == {:error, Mx.Modifier.If, :bad_regex, nil, []}
+      assert If.m("dosh", ", ?, b true, b false", %{}) == {:error, Mx.Modifier.If, :bad_regex, ", ?, b true, b false", []}
     end
 
     test "works with ok tuples", %{mappings: mappings} do

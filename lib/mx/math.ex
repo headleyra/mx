@@ -11,7 +11,7 @@ defmodule Mx.Math do
 
   def to_number_or_as_is(string) do
     case Ut.String.to_num(string) do
-      :error ->
+      {:error, _} ->
         string
 
       {:ok, number} ->

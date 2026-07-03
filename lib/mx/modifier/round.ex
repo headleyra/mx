@@ -3,19 +3,30 @@ defmodule Mx.Modifier.Round do
 
   def m(buffer, args, _mappings) do
     with \
-      {:ok, number} <- String.trim(buffer) |> Ut.String.to_num(),
-      {:ok, precision} when precision in 0..15 <- Ut.String.to_int(args)
+      {:num, {:ok, number}} <- {:num, Ut.String.to_num(buffer)},
+      {:pre, {:ok, precision}} when precision in 0..15 <- {:pre, Ut.String.to_int(args)}
     do
-      float = to_float(number)
-      result = Float.round(float, precision) |> to_string()
-      {:ok, result}
+      float = float(number)
+      {:ok, round(float, precision)}
     else
-      _parse_error ->
-        oops(:bad_number_or_precision, nil)
+      {:num, {:error, num}} ->
+        oops(:bad_number, num)
+
+      {:pre, {:error, pre}} ->
+        oops(:bad_precision, pre)
+
+      {:pre, {:ok, pre}} ->
+        oops(:bad_precision, "#{pre}")
     end
   end
 
-  defp to_float(n) do
+  defp float(n) do
     if is_integer(n), do: n * 1.0, else: n
+  end
+
+  defp round(float, precision) do
+    float
+    |> Float.round(precision)
+    |> to_string()
   end
 end

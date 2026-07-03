@@ -23,21 +23,16 @@ defmodule Mx.Modifier.RoundTest do
       assert Round.m("85", "0", %{}) == {:ok, "85.0"}
     end
 
-    test "ignores whitespace" do
-      assert Round.m(" 1.88  ", "1", %{}) == {:ok, "1.9"}
-      assert Round.m("\t -1.88 \n ", "1", %{}) == {:ok, "-1.9"}
-    end
-
-    test "errors when a number isn't given" do
-      assert Round.m("", "7", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
-      assert Round.m("\t", "5", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
-      assert Round.m("one point seven", "1", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
+    test "errors with a bad float" do
+      assert Round.m("", "7", %{}) == {:error, Mx.Modifier.Round, :bad_number, "", []}
+      assert Round.m("\t", "5", %{}) == {:error, Mx.Modifier.Round, :bad_number, "\t", []}
+      assert Round.m("one point seven", "1", %{}) == {:error, Mx.Modifier.Round, :bad_number, "one point seven", []}
     end
 
     test "errors when precision is outside of 0..15 or is not an integer" do
-      assert Round.m("1.23", "-1", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
-      assert Round.m("1.23", "16", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
-      assert Round.m("1.23", "1.2", %{}) == {:error, Mx.Modifier.Round, :bad_number_or_precision, nil, []}
+      assert Round.m("1.23", "-1", %{}) == {:error, Mx.Modifier.Round, :bad_precision, "-1", []}
+      assert Round.m("1.23", "16", %{}) == {:error, Mx.Modifier.Round, :bad_precision, "16", []}
+      assert Round.m("1.23", "1.2", %{}) == {:error, Mx.Modifier.Round, :bad_precision, "1.2", []}
     end
 
     test "works with ok-tuples" do
