@@ -6,7 +6,7 @@ defmodule Mx.Modifier.Round do
       {:num, {:ok, number}} <- {:num, Ut.String.to_num(buffer)},
       {:pre, {:ok, precision}} when precision in 0..15 <- {:pre, Ut.String.to_int(args)}
     do
-      float = float(number)
+      float = to_float(number)
       {:ok, round(float, precision)}
     else
       {:num, {:error, num}} ->
@@ -20,7 +20,7 @@ defmodule Mx.Modifier.Round do
     end
   end
 
-  defp float(n) do
+  defp to_float(n) do
     if is_integer(n), do: n * 1.0, else: n
   end
 
