@@ -4,8 +4,8 @@ defmodule Mx.MixProject do
   def project do
     [
       app: :mx,
-      version: "0.110.0",
-      elixir: "~> 1.19",
+      version: "0.111.0",
+      elixir: "~> 1.20",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
